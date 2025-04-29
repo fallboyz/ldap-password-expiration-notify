@@ -20,8 +20,8 @@ This Bash script queries an LDAP directory to find users whose passwords are nea
 You can install required packages on Rocky Linux / RHEL (EPEL repository required for msmtp):
 
 ```bash
-sudo yum install epel-release
-sudo yum install openldap-clients msmtp
+sudo dnf install epel-release
+sudo dnf install openldap-clients msmtp
 ```
 
 Or on openSUSE Leap 15.6:
