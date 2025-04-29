@@ -38,7 +38,7 @@ tls_cacert_path="/etc/ssl/certs/ca-bundle.crt"
 ## LDAP 비밀번호 정책 설정
 # default_policy_dn:
 #   - 사용자별 비밀번호 정책(pwdPolicySubentry)이 없을 경우 적용할 글로벌 정책 DN
-#   - 글로벌 정책이 있을 경우에만 주석 해제 후 작성성
+#   - 글로벌 정책이 있을 경우에만 주석 해제 후 작성
 #
 # default_max_age:
 #   - 정책 정보가 없을 때 사용하는 비밀번호 최대 유효기간 (초 단위)
