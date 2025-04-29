@@ -92,6 +92,41 @@ Scheduled daily run (via crontab):
 - TLS/SSL configurations ensure compatibility with secure LDAP environments.
 - Tested on OpenLDAP servers with password policy overlay enabled.
 
+## Email Examples
+
+### User Notification Email
+
+```
+Subject: [ExampleCorp] LDAP Password is Expiring Soon
+
+Hi John Doe,
+
+Your LDAP password will expire in 5 days (on 2024-05-03).
+
+Update your password here: https://portal.example.com
+
+For assistance, contact admin@example.com.
+
+- ExampleCorp IT Team
+```
+
+### Admin Report Email
+
+```
+Subject: [ExampleCorp] LDAP Password Expiration Report
+
+LDAP Password Expiration Report
+
+Total Users Checked: 50
+Expired Accounts: 3
+Warnings Sent: 5
+
+Details:
+Expired: user1
+Warning sent: user2 (user2@example.com)
+...
+```
+
 ## License
 
 ```
@@ -110,3 +145,4 @@ If you find a bug or have ideas for improvements, feel free to open an issue.
 
 - [LDAP Tool Box - Self Service Password](https://ltb-project.org/documentation/self-service-password/latest/index)
 - [ShellCheck](https://www.shellcheck.net/) for static analysis of shell scripts
+
