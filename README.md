@@ -8,12 +8,12 @@ This Bash script queries an LDAP directory to find users whose passwords are nea
 
 ## Features
 
-- Lightweight and pure Bash implementation
-- Connects to LDAP server (`ldap://`, `ldaps://`, StartTLS support)
-- Calculates password expiration based on LDAP password policies
-- Sends email notifications via `msmtp`
-- Sends daily reports to administrators
-- Fully configurable: LDAP, SMTP, portal URL, company branding
+* Lightweight and pure Bash implementation
+* Connects to LDAP server (`ldap://`, `ldaps://`, StartTLS support)
+* Calculates password expiration based on LDAP password policies
+* Sends email notifications via `msmtp`
+* Sends daily reports to administrators
+* Fully configurable: LDAP, SMTP, portal URL, company branding
 
 ## Prerequisites
 
@@ -44,32 +44,34 @@ sudo zypper install openldap2-client msmtp
 
 Edit the following variables inside the script:
 
-| Variable | Description |
-|:---------|:------------|
-| `ldap_uri` | LDAP server URI |
-| `ldap_bind_dn` | LDAP Bind DN |
-| `ldap_bind_pw` | Password for bind DN |
-| `use_starttls` | Use StartTLS on `ldap://` connections |
-| `use_tls_verify` | Verify TLS certificates |
-| `tls_cacert_path` | Path to CA certificates |
-| `default_max_age` | Default password lifetime (seconds) |
-| `default_expire_warning` | Default warning threshold before expiration (seconds) |
-| `search_base`, `search_filter` | LDAP search parameters |
-| `smtp_server`, `smtp_port`, `smtp_user`, `smtp_pass` | SMTP settings |
-| `mail_sender`, `report_recipient` | Email addresses |
-| `company_name`, `company_team`, `company_portal_url` | Company branding |
+| Variable                                             | Description                                           |
+| :--------------------------------------------------- | :---------------------------------------------------- |
+| `ldap_uri`                                           | LDAP server URI                                       |
+| `ldap_bind_dn`                                       | LDAP Bind DN                                          |
+| `ldap_bind_pw`                                       | Password for bind DN                                  |
+| `use_starttls`                                       | Use StartTLS on `ldap://` connections                 |
+| `use_tls_verify`                                     | Verify TLS certificates                               |
+| `tls_cacert_path`                                    | Path to CA certificates                               |
+| `default_max_age`                                    | Default password lifetime (seconds)                   |
+| `default_expire_warning`                             | Default warning threshold before expiration (seconds) |
+| `search_base`, `search_filter`                       | LDAP search parameters                                |
+| `smtp_server`, `smtp_port`, `smtp_user`, `smtp_pass` | SMTP settings                                         |
+| `mail_sender`, `report_recipient`                    | Email addresses                                       |
+| `company_name`, `company_team`, `company_portal_url` | Company branding                                      |
 
-> **Tip:**  
-> If you use [Self Service Password](https://ltb-project.org/documentation/self-service-password/latest/index) from LDAP Tool Box for password resets, you can set the `company_portal_url` variable accordingly.
+> **Tip:**
+> If you use [ldappass-ui](https://github.com/fallboyz/ldappass-ui) for password resets, set the `company_portal_url` variable to match its deployed URL.
 
 ## How It Works
 
 1. Search LDAP for all user accounts.
 2. For each user:
-   - Fetch `pwdChangedTime`
-   - Calculate expiration time
-   - If the password is expiring soon or already expired:
-     - Send notification email
+
+   * Fetch `pwdChangedTime`
+   * Calculate expiration time
+   * If the password is expiring soon or already expired:
+
+     * Send notification email
 3. Send a daily summary report to the administrator.
 
 ## Example Usage
@@ -88,9 +90,9 @@ Scheduled daily run (via crontab):
 
 ## Notes
 
-- If no user-specific policy is found (`pwdPolicySubentry`), the script uses the global policy or defaults.
-- TLS/SSL configurations ensure compatibility with secure LDAP environments.
-- Tested on OpenLDAP servers with password policy overlay enabled.
+* If no user-specific policy is found (`pwdPolicySubentry`), the script uses the global policy or defaults.
+* TLS/SSL configurations ensure compatibility with secure LDAP environments.
+* Tested on OpenLDAP servers with password policy overlay enabled.
 
 ## Email Examples
 
@@ -138,11 +140,10 @@ this stuff is worth it, you can buy me a beer in return.
 
 ## Contributions
 
-Pull requests are welcome!  
+Pull requests are welcome!
 If you find a bug or have ideas for improvements, feel free to open an issue.
 
 ## Acknowledgements
 
-- [LDAP Tool Box - Self Service Password](https://ltb-project.org/documentation/self-service-password/latest/index)
-- [ShellCheck](https://www.shellcheck.net/) for static analysis of shell scripts
-
+* [ldappass-ui](https://github.com/fallboyz/ldappass-ui) for secure password management portal
+* [ShellCheck](https://www.shellcheck.net/) for static analysis of shell scripts
