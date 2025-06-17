@@ -160,7 +160,6 @@ check_password_expiry() {
         -s base -b "${dn}" \
         cn uid mail pwdChangedTime pwdPolicySubentry )
 
-    # 사용자 속성 파싱
     local user_login user_name user_mail pwd_changed pwd_policy_dn
     user_login=$(echo "${attrs}" | awk '/^uid:/{print $2}')
     user_name=$(echo "${attrs}" | awk '/^cn:/{print substr($0, index($0,$2))}')
@@ -168,10 +167,10 @@ check_password_expiry() {
     pwd_changed=$(echo "${attrs}" | awk '/^pwdChangedTime:/{print substr($2,1,14)}')
     pwd_policy_dn=$(echo "${attrs}" | awk '/^pwdPolicySubentry:/{print $2}')
 
-    # 비밀번호 정책 조회 (사용자 정책 -> 글로벌 정책 -> 기본값)
+    # 비밀번호 정책 조회
     local policy_attrs pwd_max_age pwd_warning
-    pwd_max_age="${default_max_age}"
-    pwd_warning="${default_expire_warning}"
+    pwd_max_age=""
+    pwd_warning=""
 
     if [[ -n "${pwd_policy_dn}" ]]; then
         policy_attrs=$( "${ldap_search_bin}" "${ldap_options[@]}" \
@@ -186,33 +185,42 @@ check_password_expiry() {
         pwd_warning=$(echo "${policy_attrs}" | awk '/^pwdExpireWarning:/{print $2}')
     fi
 
-    # 비밀번호 변경일자 없으면 리포트 기록 후 종료
+    # 누락 대비: 기본값 보장
+    if [[ -z "${pwd_max_age}" ]]; then
+        pwd_max_age="${default_max_age}"
+    fi
+    if [[ -z "${pwd_warning}" ]]; then
+        pwd_warning="${default_expire_warning}"
+    fi
+
+    # 변경일자 없음 처리
     if [[ -z "${pwd_changed}" ]]; then
         report_detail+="No password change date: ${user_login}\n"
         return
     fi
 
-    # 비밀번호 변경일자 파싱
+    # 변경일 → epoch
     local date_part time_part changed_date
     date_part="${pwd_changed:0:4}-${pwd_changed:4:2}-${pwd_changed:6:2}"
     time_part="${pwd_changed:8:2}:${pwd_changed:10:2}:${pwd_changed:12:2}"
     changed_date="${date_part} ${time_part}"
 
-    # 만료 시간 계산
     local changed_epoch current_epoch expire_epoch diff
     changed_epoch=$(epoch "${changed_date}")
     current_epoch=$(date +%s)
     expire_epoch=$((changed_epoch + pwd_max_age))
+    diff=$((expire_epoch - current_epoch))
 
-    # 비밀번호 만료 여부 확인
-    if (( current_epoch > expire_epoch )); then
+    # 만료된 경우
+    if (( diff <= 0 )); then
         total_expired+=1
-        report_detail+="Expired: ${user_login}\n"
+        local expire_date
+        expire_date="$(date -d "@${expire_epoch}" '+%Y-%m-%d %H:%M:%S')"
+        report_detail+="Expired: ${user_login} - expired on ${expire_date}\n"
         return
     fi
 
-    # 경고 메일 발송 여부 체크
-    diff=$((expire_epoch - current_epoch))
+    # 만료 임박 경고
     if (( diff <= pwd_warning )); then
         send_warning_if_needed "${user_name}" "${user_mail}" "${user_login}" \
             "$((diff / 86400))" "${expire_epoch}"
