@@ -119,13 +119,15 @@ Subject: [ExampleCorp] LDAP Password Expiration Report
 
 LDAP Password Expiration Report
 
-Total Users Checked: 50
-Expired Accounts: 3
-Warnings Sent: 5
+Total Users Checked: 394
+Expired Accounts: 1
+Warnings Sent: 1
 
 Details:
 Expired: user1
-Warning sent: user2 (user2@example.com)
+Warning sent: user1 (user1@example.com)
+Warning sent: user2 (user2@example.com) - expires in 4 days (on 2025-06-21 00:00:00)
+No password change date: user3
 ...
 ```
 

@@ -229,7 +229,7 @@ send_warning_if_needed() {
     send_expiry_mail "${name}" "${mail}" "${days_left}" "${expire_date}"
 
     total_warnings+=1
-    report_detail+="Warning sent: ${login} (${mail})\n"
+    report_detail+="Warning sent: ${login} (${mail}) - expires in ${days_left} days (on ${expire_date})\n"
 }
 
 # 사용자에게 메일 발송
