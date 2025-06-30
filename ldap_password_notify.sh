@@ -9,7 +9,7 @@
 # description : Notify LDAP users of upcoming password expiration and send daily report to admin
 # author      : island_of_hermit <fallboyz@umount.net>
 # date        : 2025-04-28
-# modify      : 2025-06-17
+# modify      : 2025-06-30
 #
 # set -x
 #
