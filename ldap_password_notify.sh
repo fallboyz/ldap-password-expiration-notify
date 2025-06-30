@@ -195,7 +195,7 @@ check_password_expiry() {
 
     # 변경일자 없음 처리
     if [[ -z "${pwd_changed}" ]]; then
-        report_detail+="No password change date: ${user_login}\n"
+        report_detail+="No password change date: ${user_login}"$'\n'
         return
     fi
 
@@ -222,8 +222,9 @@ check_password_expiry() {
 
     # 만료 임박 경고
     if (( diff <= pwd_warning )); then
+        local days_left=$((diff / 86400))
         send_warning_if_needed "${user_name}" "${user_mail}" "${user_login}" \
-            "$((diff / 86400))" "${expire_epoch}"
+            "${days_left}" "${expire_epoch}"
     fi
 }
 
@@ -237,7 +238,7 @@ send_warning_if_needed() {
     send_expiry_mail "${name}" "${mail}" "${days_left}" "${expire_date}"
 
     total_warnings+=1
-    report_detail+="Warning sent: ${login} (${mail}) - expires in ${days_left} days (on ${expire_date})\n"
+    report_detail+="Warning sent: ${login} (${mail}) - expires in ${days_left} days (on ${expire_date})"$'\n'
 }
 
 # 사용자에게 메일 발송
@@ -285,7 +286,7 @@ send_admin_report() {
         if [[ -n "${report_detail}" ]]; then
             echo ""
             echo "Details:"
-            echo -e "${report_detail}"
+            printf "%b" "${report_detail}"
         fi
     } | ${mail_command} "${report_recipient}"
 }
